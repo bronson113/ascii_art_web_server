@@ -8,19 +8,19 @@ SDIR=src
 
 LIBS=-lm
 
-_DEPS = server.h
+_DEPS = main.h server.h worker.h
 DEPS = $(patsubst %,$(IDIR)/%,$(_DEPS))
 
-_OBJ = server.o 
+_OBJ = main.o server.o worker.o 
 OBJ = $(patsubst %,$(ODIR)/%,$(_OBJ))
 
-all: server
+all: main
 
 $(ODIR)/%.o: $(SDIR)/%.c $(DEPS)
 	$(CC) $(CFLAGS) -c -o $@ $< 
 
-server: $(OBJ)
-	$(CC) $(CFLAGS) -o $@ $^  $(LIBS)
+main: $(OBJ)
+	$(CC) $(CFLAGS) -o ascii_server $^ $(LIBS)
 
 .PHONY: clean
 

@@ -1,6 +1,6 @@
-#include <stdio.h>
+#include "server.h"
 
-int main(){
+void server(){
     printf("Server is running... \n");
-    return 0;
+    return;
 }
