@@ -1,6 +1,6 @@
 IDIR=inc
 CC=gcc
-CFLAGS=-I$(IDIR) -g -O0
+CFLAGS=-I$(IDIR) -g -O0 -Wall
 
 ODIR=obj
 LDIR=lib
@@ -8,10 +8,10 @@ SDIR=src
 
 LIBS=-lm
 
-_DEPS = main.h server.h worker.h
+_DEPS = main.h server.h worker.h request_queue.h
 DEPS = $(patsubst %,$(IDIR)/%,$(_DEPS))
 
-_OBJ = main.o server.o worker.o 
+_OBJ = main.o server.o worker.o request_queue.o
 OBJ = $(patsubst %,$(ODIR)/%,$(_OBJ))
 
 all: main

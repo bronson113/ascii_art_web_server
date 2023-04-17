@@ -5,22 +5,10 @@
 
 #include "server.h"
 #include "worker.h"
+#include "request_queue.h"
 
-struct request{
-    int client_fd;
-    int handled;
-    char* message;
-};
+#define WORKERS 4
 
-struct node{
-    struct node* next;
-    struct request* request;
-};
-
-struct queue{
-    struct node* requests;
-    struct node* tail;
-    int size;
-};
-
-struct queue* request_queue;
+int queue_shared_memory_id;
+struct queue *request_queue;
+int main();
