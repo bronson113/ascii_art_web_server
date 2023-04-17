@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
+#include <signal.h>
 
 #include "server.h"
 #include "worker.h"
@@ -11,4 +12,7 @@
 
 int queue_shared_memory_id;
 struct queue *request_queue;
+int child_pids[WORKERS];
+void cleanup_server();
+void cleanup_worker();
 int main();

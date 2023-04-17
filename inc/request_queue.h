@@ -13,8 +13,8 @@ struct request{
 
 struct queue{
     struct request requests[QUEUE_SIZE];
-    int head;
-    int tail;
+    _Atomic int head;
+    _Atomic int tail;
 };
 #endif
 

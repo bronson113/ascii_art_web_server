@@ -19,6 +19,7 @@ struct request* get_request(struct queue* request_queue){
     if(handled == 1){
         return NULL;
     }
+    printf("handled: %d", handled);
 
     // get the request at the head of the queue
     struct request* client_request = &request_queue->requests[request_queue->head];
