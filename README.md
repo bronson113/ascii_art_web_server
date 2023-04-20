@@ -18,7 +18,9 @@ You can connect to the server using any browser by going to `http://localhost:80
 - [ ] Request Handler
     - [X] Spawn threads
     - [X] Dispatch requests
-    - [ ] Thread safe queue
+    - [X] Thread safe queue
+    - [ ] Clean up thread on kill
+    - [ ] Parse and deal with requests
 - [ ] Response builder
 - [ ] Image download
 - [ ] Image conversion
