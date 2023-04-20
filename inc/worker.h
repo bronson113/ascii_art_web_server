@@ -17,3 +17,5 @@
 
 void handle_request(struct request* client_request);
 void worker(pid_t parent_pid, struct queue *request_queue);
+
+pid_t process_id;

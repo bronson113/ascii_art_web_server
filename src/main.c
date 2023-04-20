@@ -27,7 +27,7 @@ void cleanup_server(){
     else
         printf("Process %d removed the segment %d\n", getpid(), queue_shared_memory_id);
     
-    exit(0);
+    return;
 }
 
 void cleanup_worker(){

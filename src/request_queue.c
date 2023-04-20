@@ -9,20 +9,25 @@ void add_request(struct queue* request_queue, int client_fd){
 }
 
 struct request* get_request(struct queue* request_queue){
+    // retrieve the current head of the queue
+    // helps avoid race condition
+    int cur_head = request_queue->head;
     // check if the queue is empty
-    if(request_queue->head == request_queue->tail){
+    if(cur_head == request_queue->tail){
         return NULL;
     }
     // mark the request as handled (kind of as a lock)
-    _Atomic int handled = atomic_exchange(&request_queue->requests[request_queue->head].handled, 1);
+    _Atomic int handled = atomic_exchange(&request_queue->requests[cur_head].handled, 1);
     // if the atomic exchange get 1, the first request was already handled
     if(handled == 1){
         return NULL;
     }
-    printf("handled: %d", handled);
+
+    // debug
+    // printf("handled: %d", handled);
 
     // get the request at the head of the queue
-    struct request* client_request = &request_queue->requests[request_queue->head];
+    struct request* client_request = &request_queue->requests[cur_head];
     // move the head of the queue
     request_queue->head = (request_queue->head + 1) % QUEUE_SIZE;
     return client_request;
