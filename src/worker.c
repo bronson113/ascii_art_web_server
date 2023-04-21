@@ -1,5 +1,5 @@
 #include "worker.h"
-void handle_request(struct request* client_request){
+void handle_request(struct request* client_request, pid_t process_id){
     printf("[%05d] handling request: fd %d\n", process_id, client_request->client_fd);
     return;
 }
@@ -8,7 +8,7 @@ void worker(pid_t parent_pid, struct queue *request_queue){
 
     // open parent process as pid file descriptor
     printf("pidfd_open: pid(%d)\n", parent_pid);
-    process_id = getpid();
+    pid_t process_id = getpid();
     int pidfd = syscall(SYS_pidfd_open, parent_pid, 0);
     if(pidfd == -1){
         perror("pidfd_open failed");
@@ -32,7 +32,7 @@ void worker(pid_t parent_pid, struct queue *request_queue){
         }
         client_request->client_fd = client_fd;
 
-        handle_request(client_request);
+        handle_request(client_request, process_id);
         
         if (shutdown(client_request->client_fd, SHUT_RDWR) == -1) {
             perror("shutdown failed");
