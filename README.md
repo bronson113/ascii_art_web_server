@@ -7,7 +7,7 @@ There are several library required to build this server.
 The curl library is used to retrieve images from the internet.
 To set up the environment, run the commands below.
 ```sh
-apt-get install libcurl-dev
+apt-get install libcurl4-openssl-dev
 ```
 
 
