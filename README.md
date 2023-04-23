@@ -2,6 +2,15 @@
 
 This is a simple web server that serves ascii art. It is written in C.
 
+## Requirements
+There are several library required to build this server.
+The curl library is used to retrieve images from the internet.
+To set up the environment, run the commands below.
+```sh
+apt-get install libcurl-dev
+```
+
+
 ## Build
 
 To build the server, run `make` in the root directory of the project. This will create a `server` in the project root directory.
@@ -14,7 +23,7 @@ You can connect to the server using any browser by going to `http://localhost:80
 
 ## TODO
 
-- [x] Basic file structure
+- [X] Basic file structure
 - [ ] Request Handler
     - [X] Spawn threads
     - [X] Dispatch requests
@@ -22,7 +31,7 @@ You can connect to the server using any browser by going to `http://localhost:80
     - [ ] Clean up thread on kill
     - [ ] Parse and deal with requests
 - [ ] Response builder
-- [ ] Image download
+- [X] Image download
 - [ ] Image conversion
 - [ ] Image display
 
