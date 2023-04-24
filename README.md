@@ -32,6 +32,6 @@ You can connect to the server using any browser by going to `http://localhost:12
     - [ ] Parse and deal with requests
 - [ ] Response builder
 - [X] Image download
-- [ ] Image conversion
+- [X] Image conversion
 - [ ] Image display
 
