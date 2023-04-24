@@ -19,5 +19,6 @@ struct queue{
 };
 #endif
 
+void initialize_queue(struct queue *queue);
 struct request *get_request(struct queue *queue);
 void add_request(struct queue *queue, int client_fd);

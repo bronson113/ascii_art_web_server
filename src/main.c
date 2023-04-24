@@ -114,7 +114,10 @@ int main(){
         error(-1, errno, " ");
     }
     else
+    {
         printf("Process %d attached the segment %d\n", getpid(), queue_shared_memory_id);
-
+        // initialize the queue
+        initialize_queue(request_queue);
+    }
     return server(request_queue);
 }

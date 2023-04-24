@@ -1,5 +1,16 @@
 #include "request_queue.h"
 
+void initialize_queue(struct queue* request_queue){
+    // initialize the queue
+    request_queue->head = 0;
+    request_queue->tail = 0;
+    for(int i=0;i<QUEUE_SIZE;i++){
+        request_queue->requests[i].client_fd = -1;
+        request_queue->requests[i].handled = 1;
+    }
+    return;
+}
+
 void add_request(struct queue* request_queue, int client_fd){
     // create a new request
     request_queue->requests[request_queue->tail].client_fd = client_fd;
