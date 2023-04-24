@@ -17,9 +17,9 @@ To build the server, run `make` in the root directory of the project. This will 
 
 ## Run
 
-To run the server, run `./server` in the root directory of the project. This will start the server on port 8080.
+To run the server, run `./server` in the root directory of the project. This will start the server on port 1234.
 
-You can connect to the server using any browser by going to `http://localhost:8080`.
+You can connect to the server using any browser by going to `http://localhost:1234`.
 
 ## TODO
 
