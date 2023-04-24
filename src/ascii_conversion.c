@@ -50,6 +50,13 @@ Asciimap Convert_to_ascii(Bitmap image){
             ret[n][m] = mapping[index];
         }
     }
+
+    // free memory
+    for(int i=0;i<grey.Width;i++){
+        free(grey.Pixels[i]);
+    }
+    free(grey.Pixels);
+
     return ret;
 }
 
