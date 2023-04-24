@@ -15,4 +15,4 @@ struct queue *request_queue;
 int child_pids[WORKERS];
 void cleanup_server();
 void cleanup_worker();
-int main();
+int main(int argc, char *argv[]);

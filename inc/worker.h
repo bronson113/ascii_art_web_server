@@ -16,7 +16,7 @@
 #include "request_queue.h"
 
 #ifndef WORKER_HEADER
-void handle_request(struct request* client_request, pid_t process_id);
+void handle_request(struct request* client_request, int client_fd, pid_t process_id);
 void worker(pid_t parent_pid, struct queue *request_queue);
 
 #endif

@@ -8,4 +8,4 @@
 #include <unistd.h>
 
 #include "request_queue.h"
-int server(struct queue* request_queue);
+int server(struct queue* request_queue, int port);

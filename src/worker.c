@@ -1,6 +1,7 @@
 #include "worker.h"
-void handle_request(struct request* client_request, pid_t process_id){
+void handle_request(struct request* client_request, int client_fd, pid_t process_id){
     printf("[%05d] handling request: fd %d\n", process_id, client_request->client_fd);
+    client_request->done = 1;
     return;
 }
 
@@ -30,14 +31,13 @@ void worker(pid_t parent_pid, struct queue *request_queue){
             perror("pidfd_getfd failed");
             continue;
         }
-        client_request->client_fd = client_fd;
 
-        handle_request(client_request, process_id);
+        handle_request(client_request, client_fd, process_id);
         
-        if (shutdown(client_request->client_fd, SHUT_RDWR) == -1) {
+        if (shutdown(client_fd, SHUT_RDWR) == -1) {
             perror("shutdown failed");
         }
-        close(client_request->client_fd);
+        close(client_fd);
     }
     printf("worker process started\n");
     return;

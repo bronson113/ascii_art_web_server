@@ -44,7 +44,11 @@ void cleanup_worker(){
     return;
 }
 
-int main(){
+int main(int argc, char *argv[]){
+    int port = 1234;
+    if (argc > 1) {
+        port = atoi(argv[1]);
+    }
     // setup shared memorya for the request queue
     // read and write permissions for all users
     if ((queue_shared_memory_id = shmget(IPC_PRIVATE, sizeof(struct queue), IPC_CREAT | 0666)) < 0)
@@ -119,5 +123,5 @@ int main(){
         // initialize the queue
         initialize_queue(request_queue);
     }
-    return server(request_queue);
+    return server(request_queue, port);
 }

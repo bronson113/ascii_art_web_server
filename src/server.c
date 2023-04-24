@@ -1,6 +1,6 @@
 #include "server.h"
 
-int server(struct queue* request_queue){
+int server(struct queue* request_queue, int port){
     // https://progbook.org/httpserv.html
     
     // socket information descriptor 
@@ -11,7 +11,7 @@ int server(struct queue* request_queue){
     // constant for ipv4
 	sa.sin_family = AF_INET;
     // listen to port 1234
-	sa.sin_port = htons(1234);
+	sa.sin_port = htons(port);
     // iisten to local addresses
 	sa.sin_addr.s_addr = htonl(INADDR_ANY);
 
@@ -51,6 +51,12 @@ int server(struct queue* request_queue){
 		}
         printf("client connected\n");
         add_request(request_queue, client_fd);
+		while(request_queue->requests[request_queue->done_head].done == 1 && request_queue->requests[request_queue->done_head].handled == 1){
+			// wait for the request to be handled
+			printf("closing client fd: %d\n", request_queue->requests[request_queue->done_head].client_fd);
+			close(request_queue->requests[request_queue->done_head].client_fd);
+			request_queue->done_head = (request_queue->done_head + 1) % QUEUE_SIZE;
+		}
 	}
 
 	close(server_fd);

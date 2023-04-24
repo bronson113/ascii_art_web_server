@@ -10,12 +10,14 @@
 struct request{
     int client_fd;
     _Atomic int handled;
+    _Atomic int done;
 };
 
 struct queue{
     struct request requests[QUEUE_SIZE];
     _Atomic int head;
     _Atomic int tail;
+    _Atomic int done_head;
 };
 #endif
 

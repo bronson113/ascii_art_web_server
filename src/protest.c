@@ -6,11 +6,13 @@ size_t write_data(void *ptr, size_t size, size_t nmemb, void *stream) {
 }
 
 unsigned char* download_image(char* url) {
+	static int serial_number = 0;
 	CURL *curl_handle;
 	CURLcode res;
 	FILE *fp;
 	//sets filename for downloading image
-	char outfilename[FILENAME_MAX] = "temp.jpg";
+	char outfilename[FILENAME_MAX];
+	sprintf(outfilename, "image%016d.jpg", serial_number++);
 	
 	//initializes the CURL handle for url request
 	curl_handle = curl_easy_init();
