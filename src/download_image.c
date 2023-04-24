@@ -4,8 +4,7 @@ size_t write_data(void *ptr, size_t size, size_t nmemb, void *stream) {
 	size_t written = fwrite(ptr, size, nmemb, (FILE *)stream);
 	return written;
 }
-
-unsigned char* download_image(char* url) {
+Bitmap* download_image(char* url){
 	static int serial_number = 0;
 	CURL *curl_handle;
 	CURLcode res;
@@ -33,11 +32,33 @@ unsigned char* download_image(char* url) {
 	}
 
 	int width, height, channels;
-	unsigned char* image_data = stbi_load(outfilename, &width, &height, &channels, STBI_rgb_alpha);
+	unsigned char* image_data = stbi_load(outfilename, &width, &height, &channels, STBI_rgb);
 	if (image_data == NULL) {
 		printf("Error loading image\n");
 		return NULL;
 	}
-	return image_data;
+	Bitmap* ret = uchar_to_bitmap(image_data, width, height);
+	free(image_data);
+	return ret;
+}
+
+Bitmap* uchar_to_bitmap(unsigned char* image_data, int width, int height) {
+	Bitmap* ret = malloc(sizeof(Bitmap));
+	if(ret == NULL){
+		printf("Error allocating memory for bitmap\n");
+		return NULL;
+	}
+	ret->Width = width;
+	ret->Height = height;
+	ret->Pixels = malloc(ret->Width * sizeof(Color*));
+	for(int i=0;i<width;i++){
+		ret->Pixels[i] = malloc(ret->Height * sizeof(Color));
+		for(int j=0;j<height;j++){
+			ret->Pixels[i][j].R = image_data[i*3*width+j*3];
+			ret->Pixels[i][j].G = image_data[i*3*width+j*3+1];
+			ret->Pixels[i][j].B = image_data[i*3*width+j*3+2];
+		}
+	}
+	return ret;
 }
 

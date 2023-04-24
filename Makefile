@@ -12,7 +12,7 @@ _DEPS = main.h server.h worker.h request_queue.h curl.h stb_image.h easy.h
 
 DEPS = $(patsubst %,$(IDIR)/%,$(_DEPS))
 
-_OBJ = main.o server.o worker.o request_queue.o protest.o
+_OBJ = main.o server.o worker.o request_queue.o download_image.o
 OBJ = $(patsubst %,$(ODIR)/%,$(_OBJ))
 
 all: main
