@@ -1,5 +1,10 @@
 #include "main.h"
 
+void signal_server(){
+	cleanup_server();
+	exit(1);
+}
+
 void cleanup_server(){
 
     // kill add child and wait for all child processes to terminate
@@ -28,6 +33,11 @@ void cleanup_server(){
         printf("Process %d removed the segment %d\n", getpid(), queue_shared_memory_id);
     
     return;
+}
+
+void signal_worker(){
+	cleanup_worker();
+	exit(1);
 }
 
 void cleanup_worker(){
@@ -76,8 +86,8 @@ int main(int argc, char *argv[]){
             // child process
 
             // register cleanup function for server
-            signal(SIGINT, cleanup_worker);
-            signal(SIGTERM, cleanup_worker);
+            signal(SIGINT, signal_worker);
+            signal(SIGTERM, signal_worker);
             int res = atexit(cleanup_worker);
             if (res != 0) {
                 perror("atexit failed");
@@ -94,6 +104,9 @@ int main(int argc, char *argv[]){
             else
                 printf("Process %d attached the segment %d\n", getpid(), queue_shared_memory_id);
 
+			// close std in, so all the control command goes to the server
+			close(0);
+
             worker(parent_pid, request_queue);
             return 0;
         } else {
@@ -103,8 +116,8 @@ int main(int argc, char *argv[]){
     }
 
     // register cleanup function for server
-    signal(SIGINT, cleanup_server);
-    signal(SIGTERM, cleanup_server);
+    signal(SIGINT, signal_server);
+    signal(SIGTERM, signal_server);
     int res = atexit(cleanup_server);
     if (res != 0) {
         perror("atexit failed");
