@@ -1,6 +1,46 @@
 #include "worker.h"
+int recv_until(int fd, char* buffer, char end){
+    char temp[4];
+    int idx=0;
+    while(read(fd, temp, 1)==1){
+        if(temp[0] != end){
+            buffer[idx++] = temp[0];
+        }
+        else{
+            buffer[idx] = 0;
+            return idx;
+        }
+    }
+    return idx;
+}
+
 void handle_request(struct request* client_request, int client_fd, pid_t process_id){
+    char buf[256];
+    int len;
     printf("[%05d] handling request: fd %d\n", process_id, client_request->client_fd);
+    // get request method
+    len = recv_until(client_fd, buf, ' ');
+    printf("request method: %s (len=%d)", buf, len);
+    if(!strncmp(buf, "GET", 3)){
+        // get request url
+        len = recv_until(client_fd, buf, ' ');
+        if(len == 1 && buf[0] == '/'){
+            FILE* fp = fopen("site/frontPage.html", "r");
+            fseek(fp, 0, SEEK_END);
+            int file_len = ftell(fp);
+            fseek(fp, 0, SEEK_SET);
+            char * file_content = malloc(file_len);
+            fread(file_content, file_len, 1, fp);
+            char headers[512];
+            sprintf(headers, "HTTP/1.0 200 OK\nServer: Ascii_art_server/0.0\nContent-type: text/html; charset=utf-8\nContent-Length: %d\n\n", file_len);
+            write(client_fd, headers, strlen(headers));
+            write(client_fd, file_content, file_len);
+        }
+    }
+    else if (!strncmp(buf, "POST", 4)){
+
+    }
+    
     client_request->done = 1;
     return;
 }

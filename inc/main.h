@@ -14,5 +14,7 @@ int queue_shared_memory_id;
 struct queue *request_queue;
 int child_pids[WORKERS];
 void cleanup_server();
+void signal_server();
 void cleanup_worker();
+void signal_worker();
 int main(int argc, char *argv[]);
