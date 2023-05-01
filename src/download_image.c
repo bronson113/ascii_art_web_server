@@ -62,3 +62,16 @@ Bitmap* uchar_to_bitmap(unsigned char* image_data, int width, int height) {
 	return ret;
 }
 
+void get_jpeg()
+{
+	char url[] = "https://i.imgur.com/";
+	char input[30];
+	char extention[] = ".jpeg";
+	printf("Enter the image extention you want to curl: ");
+	scanf("%s", input);
+	strcat(url, input);
+	strcat(url, extention);
+	printf("Concatenated String: %s\n", url);
+	step2(url);
+
+}
