@@ -1,4 +1,17 @@
 #include "worker.h"
+
+int char_search(char url[], char search)
+{
+	char *result;
+	result = strchr(url, search);
+	if (result == NULL)
+	       //if search character is not in url return false	
+		return 0;
+	else
+	       //if search character is in url return true	
+		return 1;
+}
+
 int recv_until(int fd, char* buffer, int len, char end){
     char temp[4];
     int idx=0;
