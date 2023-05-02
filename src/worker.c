@@ -93,29 +93,23 @@ void handle_request(struct request* client_request, int client_fd, pid_t process
     else if (!strncmp(buf, "POST", 4)){
         len = recv_until(client_fd, buf, 256, '\n');
 		printf("location: %s\n", buf);
-		// need to fix \r\n and \n competibility
-		recv_until(client_fd, headers, 2048, '\n');
-		while(strncmp(headers, "Content-Length:", 15)){
-			printf("[header] %s", headers);
-			recv_until(client_fd, headers, 2048, '\n');
-		}
-		// get body length
-		sscanf(headers, "Content-Length: %d", &len);
+        if(!strncmp(buf, "/ASCII.html", 11)){
+            // need to fix \r\n and \n competibility
+            recv_until(client_fd, headers, 2048, '\n');
+            while(strncmp(headers, "Content-Length:", 15)){
+                printf("[header] %s", headers);
+                recv_until(client_fd, headers, 2048, '\n');
+            }
+            // get body length
+            sscanf(headers, "Content-Length: %d", &len);
 
-		// get the rest of the header
-		recv_until_str(client_fd, headers, 2048, "\r\n\r\n", 4);
-		read(client_fd, body, len);
-		
-		printf("other header: %s\nbody length: %d\nbody: %s\n", headers, len, body);
-		fp = fopen("site/ASCII.html", "r");
-		fseek(fp, 0, SEEK_END);
-		file_len = ftell(fp);
-		fseek(fp, 0, SEEK_SET);
-		file_content = malloc(file_len);
-		fread(file_content, file_len, 1, fp);
-		sprintf(headers, "HTTP/1.0 200 OK\nServer: Ascii_art_server/0.0\nContent-type: text/html; charset=utf-8\nContent-Length: %d\n\n", file_len);
-		write(client_fd, headers, strlen(headers));
-		write(client_fd, file_content, file_len);
+            // get the rest of the header
+            recv_until_str(client_fd, headers, 2048, "\r\n\r\n", 4);
+            read(client_fd, body, len);
+            
+            printf("other header: %s\nbody length: %d\nbody: %s\n", headers, len, body);
+            serve_static_file(client_fd, "site/ASCII.html");
+        }
 	}
     
     client_request->done = 1;
