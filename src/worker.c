@@ -75,6 +75,20 @@ void handle_request(struct request* client_request, int client_fd, pid_t process
         if(!strncmp(buf, "/ASCII.html", 11)){
             serve_static_file(client_fd, "site/ASCII.html");
         }
+        if(!strncmp(buf, "/snippet.html", 13)){
+            serve_static_file(client_fd, "site/snippet.html");
+        }
+        if(!strncmp(buf, "/favicon.ico", 12)){
+            fp = fopen("site/favicon.ico", "r");
+            fseek(fp, 0, SEEK_END);
+            file_len = ftell(fp);
+            fseek(fp, 0, SEEK_SET);
+            file_content = malloc(file_len);
+            fread(file_content, file_len, 1, fp);
+            sprintf(headers, "HTTP/1.0 200 OK\nServer: Ascii_art_server/0.0\nContent-type: image/x-icon; charset=utf-8\nContent-Length: %d\n\n", file_len);
+            write(client_fd, headers, strlen(headers));
+            write(client_fd, file_content, file_len);
+        }
     }
     else if (!strncmp(buf, "POST", 4)){
         len = recv_until(client_fd, buf, 256, '\n');
