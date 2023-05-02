@@ -24,6 +24,8 @@ Bitmap* download_image(char* url){
 			printf("Failed to open file\n");
 			return NULL;
 		}
+		printf("Successfully opened file\n");
+
 		curl_easy_setopt(curl_handle, CURLOPT_WRITEFUNCTION, write_data);
 		curl_easy_setopt(curl_handle, CURLOPT_WRITEDATA, fp);
 		res = curl_easy_perform(curl_handle);
