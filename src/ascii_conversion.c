@@ -5,13 +5,13 @@ Bitmap Grayscale(Bitmap image)
     Bitmap btm;
     btm.Width = image.Width;
     btm.Height = image.Height;
-    btm.Pixels = malloc(btm.Width * sizeof(Color*)); //allocates the size of the element 
+    btm.Pixels = malloc(btm.Height * sizeof(Color*)); //allocates the size of the element 
 
-    for (int i = 0; i < btm.Width; i++) 
+    for (int i = 0; i < btm.Height; i++) 
     {
-        btm.Pixels[i] = malloc(btm.Height * sizeof(Color)); //allocates the size of the element 
+        btm.Pixels[i] = malloc(btm.Width * sizeof(Color)); //allocates the size of the element 
 
-        for (int j = 0; j < btm.Height; j++)
+        for (int j = 0; j < btm.Width; j++)
         {
             int ser = (int)(image.Pixels[i][j].R * 0.3 + image.Pixels[i][j].G * 0.59 + image.Pixels[i][j].B * 0.11);
             btm.Pixels[i][j].R = ser;
@@ -29,25 +29,25 @@ Asciimap Convert_to_ascii(Bitmap image){
     Asciimap ret;
     ret.Width = grey.Width/block_size; 
     ret.Height = grey.Height/block_size; 
-    ret.Pixels = malloc(ret.Width * sizeof(char));
-    for (int n = 0; n < ret.Width; n++) 
+    ret.Pixels = malloc(ret.Height * sizeof(char*)+10);
+    for (int n = 0; n < ret.Height; n++) 
     {
-        ret.Pixels[n] = malloc(ret.Height * sizeof(char)); //allocates the size of the element 
+        ret.Pixels[n] = malloc(ret.Width * sizeof(char)+10); //allocates the size of the element 
 
-        for (int m = 0; m < ret.Height; m++)
+        for (int m = 0; m < ret.Width; m++)
         {
-            int sum = 0; 
-            for (int i = 0, i < block_size, i++)
+            float sum = 0; 
+            for (int i = 0; i < block_size; i++)
             {
-                for (int j = 0, j < block_size, j++)
+                for (int j = 0; j < block_size; j++)
                 {
-                    sum += grey[n*block_size+i][m*block_size+j].R;                
+                    sum += grey.Pixels[n*block_size+i][m*block_size+j].R;                
                 }
             }
             float average = sum / block_size / block_size;
             char mapping[] = "$@B%8&WM#*oahkbdpqwmZO0QLCJUYXzcvunxrjft/\\|()1{}[]?-_+~<>i!lI;:,\"^`'. ";
             int index = average / (255.0 / strlen(mapping));
-            ret[n][m] = mapping[index];
+            ret.Pixels[n][m] = mapping[index];
         }
     }
 

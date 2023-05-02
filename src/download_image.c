@@ -52,10 +52,10 @@ Bitmap* uchar_to_bitmap(unsigned char* image_data, int width, int height) {
 	}
 	ret->Width = width;
 	ret->Height = height;
-	ret->Pixels = malloc(ret->Width * sizeof(Color*));
-	for(int i=0;i<width;i++){
-		ret->Pixels[i] = malloc(ret->Height * sizeof(Color));
-		for(int j=0;j<height;j++){
+	ret->Pixels = malloc(ret->Height * sizeof(Color*));
+	for(int i=0;i<height;i++){
+		ret->Pixels[i] = malloc(ret->Width * sizeof(Color));
+		for(int j=0;j<width;j++){
 			ret->Pixels[i][j].R = image_data[i*3*width+j*3];
 			ret->Pixels[i][j].G = image_data[i*3*width+j*3+1];
 			ret->Pixels[i][j].B = image_data[i*3*width+j*3+2];
