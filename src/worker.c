@@ -119,6 +119,19 @@ void handle_request(struct request* client_request, int client_fd, pid_t process
             // get the rest of the header
             recv_until_str(client_fd, headers, 2048, "\r\n\r\n", 4);
             read(client_fd, body, len);
+            const char url_ch = '=';
+            char *url_string = strchr(body,url_ch);
+            int value = char_search(url_string,'/');
+            Bitmap image;
+            if (value = 1)
+            {
+               image = download_image(url_string);
+            }
+            else
+            {
+               image = download_image_by_id(url_string);
+            }
+           
             
             printf("other header: %s\nbody length: %d\nbody: %s\n", headers, len, body);
             serve_static_file(client_fd, "site/ASCII.html");
