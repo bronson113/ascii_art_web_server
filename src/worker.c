@@ -1,5 +1,5 @@
 #include "worker.h"
-int recv_until(int fd, char* buffer, char end){
+int recv_until(int fd, char* buffer, int len, char end){
     char temp[4];
     int idx=0;
     while(read(fd, temp, 1)==1){
@@ -10,36 +10,87 @@ int recv_until(int fd, char* buffer, char end){
             buffer[idx] = 0;
             return idx;
         }
+		if(idx >= len-1){
+			buffer[len-1] = 0;
+			return len-1;
+		}
     }
     return idx;
 }
 
+int recv_until_str(int fd, char* buffer, int len, char* end_str, int pat_len){
+	char temp[4];
+	int idx = 0;
+	while(read(fd, temp, 1) == 1){
+		buffer[idx++] = temp[0];
+		if(idx >= len-1){
+			buffer[len-1] = 0;
+			return len-1;
+		}
+		if(idx < pat_len){
+			continue;
+		}
+		if(!strncmp(buffer+idx-pat_len, end_str, pat_len)){
+            buffer[idx--] = 0;
+			return idx;
+		}
+	}
+	return idx;
+}
+
 void handle_request(struct request* client_request, int client_fd, pid_t process_id){
     char buf[256];
+	char headers[2048], body[2048];
+	char *file_content;
     int len;
+	FILE *fp;
+	int file_len;
     printf("[%05d] handling request: fd %d\n", process_id, client_request->client_fd);
     // get request method
-    len = recv_until(client_fd, buf, ' ');
+    len = recv_until(client_fd, buf, 256, ' ');
     printf("request method: %s (len=%d)", buf, len);
     if(!strncmp(buf, "GET", 3)){
         // get request url
-        len = recv_until(client_fd, buf, ' ');
+        len = recv_until(client_fd, buf, 256, ' ');
         if(len == 1 && buf[0] == '/'){
-            FILE* fp = fopen("site/frontPage.html", "r");
+            fp = fopen("site/frontPage.html", "r");
             fseek(fp, 0, SEEK_END);
-            int file_len = ftell(fp);
+            file_len = ftell(fp);
             fseek(fp, 0, SEEK_SET);
-            char * file_content = malloc(file_len);
+            file_content = malloc(file_len);
             fread(file_content, file_len, 1, fp);
-            char headers[512];
             sprintf(headers, "HTTP/1.0 200 OK\nServer: Ascii_art_server/0.0\nContent-type: text/html; charset=utf-8\nContent-Length: %d\n\n", file_len);
             write(client_fd, headers, strlen(headers));
             write(client_fd, file_content, file_len);
         }
     }
     else if (!strncmp(buf, "POST", 4)){
+        len = recv_until(client_fd, buf, 256, '\n');
+		printf("location: %s\n", buf);
+		// need to fix \r\n and \n competibility
+		recv_until(client_fd, headers, 2048, '\n');
+		while(strncmp(headers, "Content-Length:", 15)){
+			printf("[header] %s", headers);
+			recv_until(client_fd, headers, 2048, '\n');
+		}
+		// get body length
+		sscanf(headers, "Content-Length: %d", &len);
 
-    }
+		// get the rest of the header
+		recv_until_str(client_fd, headers, 2048, "\r\n\r\n", 4);
+		read(client_fd, body, len);
+		
+		printf("other header: %s\nbody length: %d\nbody: %s\n", headers, len, body);
+		fp = fopen("site/frontPage.html", "r");
+		fseek(fp, 0, SEEK_END);
+		file_len = ftell(fp);
+		fseek(fp, 0, SEEK_SET);
+		file_content = malloc(file_len);
+		fread(file_content, file_len, 1, fp);
+		sprintf(headers, "HTTP/1.0 200 OK\nServer: Ascii_art_server/0.0\nContent-type: text/html; charset=utf-8\nContent-Length: %d\n\n", file_len);
+		write(client_fd, headers, strlen(headers));
+		write(client_fd, file_content, file_len);
+	}
     
     client_request->done = 1;
     return;
