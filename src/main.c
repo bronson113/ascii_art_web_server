@@ -1,7 +1,7 @@
 #include "main.h"
 
 void signal_server(){
-	cleanup_server();
+//	cleanup_server();
 	exit(1);
 }
 
@@ -14,14 +14,13 @@ void cleanup_server(){
     while(wait(NULL) > 0);
     printf("All child processes terminated\n");
     
+    printf("Process %d detached the segment %d\n", getpid(), queue_shared_memory_id);
     // detach from the shared memory segment
     if (shmdt(request_queue) == -1)
     {
         perror("Process shmdt returned -1\n");
         error(-1, errno, " ");
     }
-    else
-        printf("Process %d detached the segment %d\n", getpid(), queue_shared_memory_id);
 
     // remove the shared memory segment
     if (shmctl(queue_shared_memory_id, IPC_RMID, NULL) == -1)
@@ -36,19 +35,18 @@ void cleanup_server(){
 }
 
 void signal_worker(){
-	cleanup_worker();
+//	cleanup_worker();
 	exit(1);
 }
 
 void cleanup_worker(){
     // detach from the shared memory segment
+    printf("Process %d detached the segment %d\n", getpid(), queue_shared_memory_id);
     if (shmdt(request_queue) == -1)
     {
         perror("Process shmdt returned -1\n");
         error(-1, errno, " ");
     }
-    else
-        printf("Process %d detached the segment %d\n", getpid(), queue_shared_memory_id);
 
     printf("Cleaning up worker\n");
     return;
