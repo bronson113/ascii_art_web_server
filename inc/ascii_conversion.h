@@ -1,4 +1,6 @@
 #include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 /*
 credit to bitesofcode.com for the concept and ChatGPT for the generation of the code. Comments are utilized here to indicate
 understanding of the code
