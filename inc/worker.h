@@ -18,6 +18,7 @@
 #ifndef WORKER_HEADER
 int recv_until_str(int fd, char* buffer, int len, char* end_str, int pat_len);
 int recv_until(int fd, char* buffer, int len, char end);
+void serve_static_file(int client_fd, char* file_name);
 void handle_request(struct request* client_request, int client_fd, pid_t process_id);
 void worker(pid_t parent_pid, struct queue *request_queue);
 

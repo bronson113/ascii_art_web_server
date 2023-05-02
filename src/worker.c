@@ -38,6 +38,22 @@ int recv_until_str(int fd, char* buffer, int len, char* end_str, int pat_len){
 	return idx;
 }
 
+void serve_static_file(int client_fd, char* file_name){
+    char *file_content;
+    FILE *fp;
+    int file_len;
+    char headers[2048];
+    fp = fopen(file_name, "r");
+    fseek(fp, 0, SEEK_END);
+    file_len = ftell(fp);
+    fseek(fp, 0, SEEK_SET);
+    file_content = malloc(file_len);
+    fread(file_content, file_len, 1, fp);
+    sprintf(headers, "HTTP/1.0 200 OK\nServer: Ascii_art_server/0.0\nContent-type: text/html; charset=utf-8\nContent-Length: %d\n\n", file_len);
+    write(client_fd, headers, strlen(headers));
+    write(client_fd, file_content, file_len);
+}
+
 void handle_request(struct request* client_request, int client_fd, pid_t process_id){
     char buf[256];
 	char headers[2048], body[2048];
@@ -45,23 +61,19 @@ void handle_request(struct request* client_request, int client_fd, pid_t process
     int len;
 	FILE *fp;
 	int file_len;
-    printf("[%05d] handling request: fd %d\n", process_id, client_request->client_fd);
+//    printf("[%05d] handling request: fd %d\n", process_id, client_request->client_fd);
     // get request method
     len = recv_until(client_fd, buf, 256, ' ');
-    printf("request method: %s (len=%d)", buf, len);
+    printf("request method: %s (len=%d)\n", buf, len);
     if(!strncmp(buf, "GET", 3)){
         // get request url
         len = recv_until(client_fd, buf, 256, ' ');
+        printf("Get %s\n", buf);
         if(len == 1 && buf[0] == '/'){
-            fp = fopen("site/frontPage.html", "r");
-            fseek(fp, 0, SEEK_END);
-            file_len = ftell(fp);
-            fseek(fp, 0, SEEK_SET);
-            file_content = malloc(file_len);
-            fread(file_content, file_len, 1, fp);
-            sprintf(headers, "HTTP/1.0 200 OK\nServer: Ascii_art_server/0.0\nContent-type: text/html; charset=utf-8\nContent-Length: %d\n\n", file_len);
-            write(client_fd, headers, strlen(headers));
-            write(client_fd, file_content, file_len);
+            serve_static_file(client_fd, "site/frontPage.html");
+        }
+        if(!strncmp(buf, "/ASCII.html", 11)){
+            serve_static_file(client_fd, "site/ASCII.html");
         }
     }
     else if (!strncmp(buf, "POST", 4)){
@@ -81,7 +93,7 @@ void handle_request(struct request* client_request, int client_fd, pid_t process
 		read(client_fd, body, len);
 		
 		printf("other header: %s\nbody length: %d\nbody: %s\n", headers, len, body);
-		fp = fopen("site/frontPage.html", "r");
+		fp = fopen("site/ASCII.html", "r");
 		fseek(fp, 0, SEEK_END);
 		file_len = ftell(fp);
 		fseek(fp, 0, SEEK_SET);
