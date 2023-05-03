@@ -5,14 +5,40 @@ body {background-color: black;}
 h1   {color: white;}
 p    {color: white;}
 .content {
-  max-width: 500px;
+  max-width: 100%;
   margin: auto;
+}
+#ascii-art {
+  background-color: black;
+  color: white;
+  font-family: 'Courier New', monospace;
+  font-size: 0.4em;
+  line-height: 1.2em;
+  white-space: pre;
+  overflow: auto;
+  padding: 1em;
 }
 </style>
 <body>
 <div class = "content">
 <h1>Converted Image</h1>
-<embed src="snippet.html" width="500" height="200">
+<p id = "ascii-art"></p>
 </div class = "content">
+<script>
+  fetch("snippet.html")
+  .then((response) => {
+    if (!response.ok) {
+      throw new Error(`HTTP error! Status: ${response.status}`);
+    }
+
+    return response.blob();
+  })
+  .then((response) => {
+    return response.text();
+  })
+  .then((value) => {
+    document.getElementById("ascii-art").innerHTML = value;
+  });
+</script>
 </body>
 </html> 

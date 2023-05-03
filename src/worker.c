@@ -125,7 +125,7 @@ void handle_request(struct request* client_request, int client_fd, pid_t process
             // need to fix \r\n and \n competibility
             recv_until(client_fd, headers, 2048, '\n');
             while(strncmp(headers, "Content-Length:", 15)){
-                printf("[header] %s", headers);
+                printf("[header] %s\n", headers);
                 recv_until(client_fd, headers, 2048, '\n');
             }
             // get body length
@@ -133,7 +133,10 @@ void handle_request(struct request* client_request, int client_fd, pid_t process
 
             // get the rest of the header
             recv_until_str(client_fd, headers, 2048, "\r\n\r\n", 4);
+            memset(body, 0, 2048);
             read(client_fd, body, len);
+            body[len] = 0;
+            printf("len: %d, body: %s\n", len, body);
             char *decoded_string = urlDecode(body);
             const char url_ch = '=';
             char *url_string = strchr(decoded_string, url_ch);
@@ -149,7 +152,10 @@ void handle_request(struct request* client_request, int client_fd, pid_t process
             {
                image = download_image_by_id(url_string);
             }
+            free(decoded_string);
+            printf("image height: %d, width: %d\n", image->Height, image->Width);
             Asciimap ascii = Convert_to_ascii(*image);
+            printf("ascii height: %d, width: %d\n", ascii.Height, ascii.Width);
             char file_name[100];
             sprintf(file_name, "/tmp/ascii_%d.html", request_id+getpid()*1000);
 

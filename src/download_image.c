@@ -11,7 +11,8 @@ Bitmap* download_image(char* url){
 	FILE *fp;
 	//sets filename for downloading image
 	char outfilename[FILENAME_MAX];
-	sprintf(outfilename, "/tmp/image%016d.jpg", serial_number++);
+	printf("Actual url: %s\n", url);
+	sprintf(outfilename, "/tmp/image%016d.jpg", getpid()*10000 + serial_number++);
 	
 	//initializes the CURL handle for url request
 	curl_handle = curl_easy_init();
@@ -39,6 +40,7 @@ Bitmap* download_image(char* url){
 		printf("Error loading image\n");
 		return NULL;
 	}
+	printf("successfully loaded image\n");
 	Bitmap* ret = uchar_to_bitmap(image_data, width, height);
 	free(image_data);
 	return ret;
@@ -66,10 +68,11 @@ Bitmap* uchar_to_bitmap(unsigned char* image_data, int width, int height) {
 
 Bitmap* download_image_by_id(char* id)
 {
-	char url[200] = "https://i.imgur.com/";
+	char url[] = "https://i.imgur.com/";
 	char extention[] = ".jpeg";
-	strcat(url, id);
-	strcat(url, extention);
-	printf("Actual location: %s\n", url);
-	return download_image(url);
+	char target_url[200];
+	memset(target_url, 0, sizeof(target_url));
+	sprintf(target_url, "%s%s%s", url, id, extention);
+	printf("Actual location: %s\n", target_url);
+	return download_image(target_url);
 }

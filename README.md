@@ -24,14 +24,14 @@ You can connect to the server using any browser by going to `http://localhost:12
 ## TODO
 
 - [X] Basic file structure
-- [ ] Request Handler
+- [X] Request Handler
     - [X] Spawn threads
     - [X] Dispatch requests
     - [X] Thread safe queue
-    - [ ] Clean up thread on kill
-    - [ ] Parse and deal with requests
-- [ ] Response builder
+    - [X] Clean up thread on kill
+    - [X] Parse and deal with requests
+- [X] Response builder
 - [X] Image download
 - [X] Image conversion
-- [ ] Image display
+- [X] Image display
 
