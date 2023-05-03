@@ -8,11 +8,11 @@ SDIR=src
 
 LIBS=-lm -lcurl -L$(LDIR)
 
-_DEPS = main.h server.h worker.h request_queue.h curl.h stb_image.h easy.h
+_DEPS = ascii_conversion.h  curl.h  curlver.h  download_image.h  easy.h  header.h  main.h  mprintf.h  multi.h  options.h  request_queue.h  server.h  stb_image.h  stdcheaders.h  system.h  typecheck-gcc.h  urlapi.h  worker.h urldecode.h
 
 DEPS = $(patsubst %,$(IDIR)/%,$(_DEPS))
 
-_OBJ = main.o server.o worker.o request_queue.o download_image.o
+_OBJ = main.o server.o worker.o request_queue.o download_image.o ascii_conversion.o urldecode.o
 OBJ = $(patsubst %,$(ODIR)/%,$(_OBJ))
 
 all: main

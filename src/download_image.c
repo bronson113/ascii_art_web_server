@@ -11,7 +11,7 @@ Bitmap* download_image(char* url){
 	FILE *fp;
 	//sets filename for downloading image
 	char outfilename[FILENAME_MAX];
-	sprintf(outfilename, "image%016d.jpg", serial_number++);
+	sprintf(outfilename, "/tmp/image%016d.jpg", serial_number++);
 	
 	//initializes the CURL handle for url request
 	curl_handle = curl_easy_init();

@@ -1,6 +1,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#ifndef ASCII_CONVERSION_H
+#define ASCII_CONVERSION_H
 /*
 credit to bitesofcode.com for the concept and ChatGPT for the generation of the code. Comments are utilized here to indicate
 understanding of the code
@@ -31,3 +33,4 @@ typedef struct
 
 Bitmap Grayscale(Bitmap image);
 Asciimap Convert_to_ascii(Bitmap image);
+#endif

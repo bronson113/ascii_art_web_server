@@ -14,6 +14,11 @@
 #include <string.h>
 
 #include "request_queue.h"
+#ifndef STB_IMAGE_IMPLEMENTATION
+#include "download_image.h"
+#endif
+#include "ascii_conversion.h"
+#include "urldecode.h"
 
 #ifndef WORKER_HEADER
 int recv_until_str(int fd, char* buffer, int len, char* end_str, int pat_len);

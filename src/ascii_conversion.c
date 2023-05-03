@@ -46,7 +46,7 @@ Asciimap Convert_to_ascii(Bitmap image){
             }
             float average = sum / block_size / block_size;
             char mapping[] = "$@B%8&WM#*oahkbdpqwmZO0QLCJUYXzcvunxrjft/\\|()1{}[]?-_+~<>i!lI;:,\"^`'. ";
-            int index = average / (255.0 / strlen(mapping));
+            int index = average / (256.0 / strlen(mapping));
             ret.Pixels[n][m] = mapping[index];
         }
     }
