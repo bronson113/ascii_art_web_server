@@ -4,8 +4,10 @@ int server(struct queue* request_queue, int port){
     // https://progbook.org/httpserv.html
 
 	printf("Welcome to the server\n");
+	printf("Go to http://localhost:%d/ to see the server in action\n", port);
 	printf("To exit the server, directly ^C\n");
 	printf("It will perform clean up automatically on interrupt\n");
+
     
     // socket information descriptor 
     struct sockaddr_in sa;
